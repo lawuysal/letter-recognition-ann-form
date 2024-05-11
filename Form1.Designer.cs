@@ -90,6 +90,8 @@
             deserializeBtn = new Button();
             trainButton = new Button();
             panel42 = new Panel();
+            label5 = new Label();
+            errorNumeric = new NumericUpDown();
             panel43 = new Panel();
             clearBtn = new Button();
             label2 = new Label();
@@ -102,6 +104,7 @@
             panel38.SuspendLayout();
             panel37.SuspendLayout();
             panel42.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)errorNumeric).BeginInit();
             panel43.SuspendLayout();
             SuspendLayout();
             // 
@@ -632,7 +635,6 @@
             panel37.Name = "panel37";
             panel37.Size = new Size(509, 46);
             panel37.TabIndex = 0;
-            panel37.Paint += panel37_Paint;
             // 
             // outputA
             // 
@@ -655,7 +657,7 @@
             // start
             // 
             start.BackColor = Color.Lavender;
-            start.Location = new Point(51, 16);
+            start.Location = new Point(50, 40);
             start.Name = "start";
             start.Size = new Size(94, 29);
             start.TabIndex = 9;
@@ -666,7 +668,7 @@
             // button1
             // 
             button1.BackColor = Color.Lavender;
-            button1.Location = new Point(15, 58);
+            button1.Location = new Point(17, 93);
             button1.Name = "button1";
             button1.Size = new Size(30, 30);
             button1.TabIndex = 10;
@@ -677,7 +679,7 @@
             // button2
             // 
             button2.BackColor = Color.Lavender;
-            button2.Location = new Point(75, 58);
+            button2.Location = new Point(77, 93);
             button2.Name = "button2";
             button2.Size = new Size(30, 30);
             button2.TabIndex = 11;
@@ -688,7 +690,7 @@
             // button3
             // 
             button3.BackColor = Color.Lavender;
-            button3.Location = new Point(135, 58);
+            button3.Location = new Point(137, 93);
             button3.Name = "button3";
             button3.Size = new Size(30, 30);
             button3.TabIndex = 12;
@@ -699,7 +701,7 @@
             // button4
             // 
             button4.BackColor = Color.Lavender;
-            button4.Location = new Point(195, 58);
+            button4.Location = new Point(197, 93);
             button4.Name = "button4";
             button4.Size = new Size(30, 30);
             button4.TabIndex = 13;
@@ -710,7 +712,7 @@
             // button5
             // 
             button5.BackColor = Color.Lavender;
-            button5.Location = new Point(255, 58);
+            button5.Location = new Point(257, 93);
             button5.Name = "button5";
             button5.Size = new Size(30, 30);
             button5.TabIndex = 14;
@@ -721,7 +723,7 @@
             // serializeBtn
             // 
             serializeBtn.BackColor = Color.LightCyan;
-            serializeBtn.Location = new Point(231, 58);
+            serializeBtn.Location = new Point(231, 93);
             serializeBtn.Name = "serializeBtn";
             serializeBtn.Size = new Size(94, 29);
             serializeBtn.TabIndex = 15;
@@ -732,7 +734,7 @@
             // deserializeBtn
             // 
             deserializeBtn.BackColor = Color.LightCyan;
-            deserializeBtn.Location = new Point(331, 58);
+            deserializeBtn.Location = new Point(331, 93);
             deserializeBtn.Name = "deserializeBtn";
             deserializeBtn.Size = new Size(94, 29);
             deserializeBtn.TabIndex = 16;
@@ -743,7 +745,7 @@
             // trainButton
             // 
             trainButton.BackColor = Color.LightCyan;
-            trainButton.Location = new Point(281, 23);
+            trainButton.Location = new Point(331, 40);
             trainButton.Name = "trainButton";
             trainButton.Size = new Size(94, 29);
             trainButton.TabIndex = 17;
@@ -754,13 +756,37 @@
             // panel42
             // 
             panel42.BackColor = Color.LightSkyBlue;
+            panel42.Controls.Add(label5);
+            panel42.Controls.Add(errorNumeric);
             panel42.Controls.Add(trainButton);
             panel42.Controls.Add(serializeBtn);
             panel42.Controls.Add(deserializeBtn);
             panel42.Location = new Point(325, 424);
             panel42.Name = "panel42";
-            panel42.Size = new Size(655, 103);
+            panel42.Size = new Size(655, 142);
             panel42.TabIndex = 18;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(231, 19);
+            label5.Name = "label5";
+            label5.Size = new Size(44, 20);
+            label5.TabIndex = 19;
+            label5.Text = "Error:";
+            // 
+            // errorNumeric
+            // 
+            errorNumeric.BackColor = Color.LightCyan;
+            errorNumeric.DecimalPlaces = 4;
+            errorNumeric.Increment = new decimal(new int[] { 1, 0, 0, 196608 });
+            errorNumeric.Location = new Point(231, 42);
+            errorNumeric.Maximum = new decimal(new int[] { 1, 0, 0, 0 });
+            errorNumeric.Minimum = new decimal(new int[] { 1, 0, 0, 262144 });
+            errorNumeric.Name = "errorNumeric";
+            errorNumeric.Size = new Size(94, 27);
+            errorNumeric.TabIndex = 18;
+            errorNumeric.Value = new decimal(new int[] { 1, 0, 0, 196608 });
             // 
             // panel43
             // 
@@ -774,13 +800,13 @@
             panel43.Controls.Add(button3);
             panel43.Location = new Point(12, 424);
             panel43.Name = "panel43";
-            panel43.Size = new Size(300, 103);
+            panel43.Size = new Size(300, 142);
             panel43.TabIndex = 19;
             // 
             // clearBtn
             // 
             clearBtn.BackColor = Color.Lavender;
-            clearBtn.Location = new Point(151, 16);
+            clearBtn.Location = new Point(150, 40);
             clearBtn.Name = "clearBtn";
             clearBtn.Size = new Size(94, 29);
             clearBtn.TabIndex = 10;
@@ -810,7 +836,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(992, 540);
+            ClientSize = new Size(992, 578);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(panel43);
@@ -832,6 +858,8 @@
             panel37.ResumeLayout(false);
             panel37.PerformLayout();
             panel42.ResumeLayout(false);
+            panel42.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)errorNumeric).EndInit();
             panel43.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -905,5 +933,7 @@
         private Button clearBtn;
         private Label label2;
         private Label label3;
+        private NumericUpDown errorNumeric;
+        private Label label5;
     }
 }

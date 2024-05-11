@@ -8,11 +8,7 @@ namespace letter_recognition_ann_form
         public Form1()
         {
             InitializeComponent();
-
-            // Initialize the network
             network = new NeuralNet(inputNodes: 35, hiddenNodes: 3, outputNodes: 5);
-
-
         }
 
         private void panel27_MouseClick(object sender, MouseEventArgs e)
@@ -27,11 +23,6 @@ namespace letter_recognition_ann_form
             {
                 box.BackColor = Color.SteelBlue;
             }
-        }
-
-        private void panel37_Paint(object sender, PaintEventArgs e)
-        {
-
         }
 
         private void start_Click(object sender, EventArgs e)
@@ -231,28 +222,38 @@ namespace letter_recognition_ann_form
                 new double[] {0,0,0,0,1} };
 
             // Train the network
-            int epochs = 10000;
-            for (int i = 0; i < epochs; i++)
+            int epochs = 0;
+            bool isStopped = false;
+            for (int i = 0; NeuralNet.error >= (double)errorNumeric.Value; i++)
             {
+                if (epochs > 1000000)
+                {
+                    isStopped = true;
+                    MessageBox.Show("Training has stopped because it reached 1000000 epochs.");
+                    break;
+                }
                 for (int j = 0; j < trainingDataInputs.Length; j++)
                 {
                     network.BackPropagation(trainingDataInputs[j], trainingDataTargets[j]);
                 }
+                epochs++;
             }
 
-            MessageBox.Show("Eðitim tamamlandý.");
+            if (!isStopped)
+            {
+                MessageBox.Show("Training has completed after " + epochs + " epochs.");
+            }
+
         }
 
         private void serializeBtn_Click(object sender, EventArgs e)
         {
             NeuralNet.SerializeWeights();
-            MessageBox.Show("Aðýrlýklar dosyaya kaydedildi.");
         }
 
         private void deserializeBtn_Click(object sender, EventArgs e)
         {
             NeuralNet.DeserializeWeights();
-            MessageBox.Show("Aðýrlýklar dosyadan yüklendi.");
         }
     }
 

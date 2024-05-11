@@ -9,27 +9,28 @@ namespace letter_recognition_ann_form
 {
     public class NeuralNet
     {
+        public static double error = 1;
         public static double[,] testInput = new double[7, 5];
         public static List<Panel> panels = new List<Panel>();
-        static private double[,] weightsInputHidden; 
-        static private double[,] weightsHiddenOutput; 
-        static private double[] biasesHidden; 
-        static private double[] biasOutput; 
+        static private double[,] weightsInputToHidden; 
+        static private double[,] weightsHiddenToOutput; 
+        static private double[] hiddenBiases; 
+        static private double[] outputBiases; 
         private double learningRate = 0.1; 
 
         public NeuralNet(int inputNodes, int hiddenNodes, int outputNodes)
         {
-            weightsInputHidden = new double[inputNodes, hiddenNodes];
-            weightsHiddenOutput = new double[hiddenNodes, outputNodes];
-            biasesHidden = new double[hiddenNodes];
-            biasOutput = new double[outputNodes];
-            Random rnd = new Random();
+            weightsInputToHidden = new double[inputNodes, hiddenNodes];
+            weightsHiddenToOutput = new double[hiddenNodes, outputNodes];
+            hiddenBiases = new double[hiddenNodes];
+            outputBiases = new double[outputNodes];
+            Random random = new Random();
 
             for (int i = 0; i < inputNodes; i++)
             {
                 for (int j = 0; j < hiddenNodes; j++)
                 {
-                    weightsInputHidden[i, j] = rnd.NextDouble() - 0.5;
+                    weightsInputToHidden[i, j] = random.NextDouble() - 0.5;
                 }
             }
 
@@ -37,49 +38,49 @@ namespace letter_recognition_ann_form
             {
                 for (int j = 0; j < outputNodes; j++)
                 {
-                    weightsHiddenOutput[i, j] = rnd.NextDouble() - 0.5;
+                    weightsHiddenToOutput[i, j] = random.NextDouble() - 0.5;
                 }
-                biasesHidden[i] = rnd.NextDouble() - 0.5;
+                hiddenBiases[i] = random.NextDouble() - 0.5;
             }
 
             for (int i = 0; i < outputNodes; i++)
             {
-                biasOutput[i] = rnd.NextDouble() - 0.5;
+                outputBiases[i] = random.NextDouble() - 0.5;
             }
         }
 
         private double Sigmoid(double x)
         {
-            return 1.0 / (1.0 + Math.Exp(-x));
+            return 1 / (1 + Math.Exp(-x));
         }
 
         private double SigmoidDerivative(double x)
         {
             double sigmoid = Sigmoid(x);
-            return sigmoid * (1.0 - sigmoid);
+            return sigmoid * (1 - sigmoid);
         }
 
         public double[] FeedForward(double[,] inputs)
         {
             int inputNodes = inputs.GetLength(0);
             int cols = inputs.GetLength(1);
-            int outputNodes = biasOutput.Length;
-            double[] hiddenInputs = new double[biasesHidden.Length];
-            double[] hiddenOutputs = new double[biasesHidden.Length];
+            int outputNodes = outputBiases.Length;
+            double[] hiddenInputs = new double[hiddenBiases.Length];
+            double[] hiddenOutputs = new double[hiddenBiases.Length];
             double[] output = new double[outputNodes];
 
             // Hidden layer calculations
-            for (int i = 0; i < biasesHidden.Length; i++)
+            for (int i = 0; i < hiddenBiases.Length; i++)
             {
-                double sum = 0.0;
+                double sum = 0;
                 for (int j = 0; j < inputNodes; j++)
                 {
                     for (int k = 0; k < cols; k++)
                     {
-                        sum += inputs[j, k] * weightsInputHidden[j, i];
+                        sum += inputs[j, k] * weightsInputToHidden[j, i];
                     }
                 }
-                sum += biasesHidden[i];
+                sum += hiddenBiases[i];
                 hiddenInputs[i] = sum;
                 hiddenOutputs[i] = Sigmoid(sum);
             }
@@ -87,12 +88,12 @@ namespace letter_recognition_ann_form
             // Output layer calculations
             for (int i = 0; i < outputNodes; i++)
             {
-                double sum = 0.0;
-                for (int j = 0; j < biasesHidden.Length; j++)
+                double sum = 0;
+                for (int j = 0; j < hiddenBiases.Length; j++)
                 {
-                    sum += hiddenOutputs[j] * weightsHiddenOutput[j, i];
+                    sum += hiddenOutputs[j] * weightsHiddenToOutput[j, i];
                 }
-                sum += biasOutput[i];
+                sum += outputBiases[i];
                 output[i] = Sigmoid(sum);
             }
 
@@ -103,25 +104,25 @@ namespace letter_recognition_ann_form
         {
             int inputNodes = inputs.GetLength(0);
             int cols = inputs.GetLength(1);
-            int outputNodes = biasOutput.Length;
+            int outputNodes = outputBiases.Length;
 
             // FORWARD PROPAGATION
-            double[] hiddenInputs = new double[biasesHidden.Length];
-            double[] hiddenOutputs = new double[biasesHidden.Length];
+            double[] hiddenInputs = new double[hiddenBiases.Length];
+            double[] hiddenOutputs = new double[hiddenBiases.Length];
             double[] output = new double[outputNodes];
 
             // FORWARD PROPAGATION - Hidden layer calculations
-            for (int i = 0; i < biasesHidden.Length; i++)
+            for (int i = 0; i < hiddenBiases.Length; i++)
             {
-                double sum = 0.0;
+                double sum = 0;
                 for (int j = 0; j < inputNodes; j++)
                 {
                     for (int k = 0; k < cols; k++)
                     {
-                        sum += inputs[j, k] * weightsInputHidden[j, i];
+                        sum += inputs[j, k] * weightsInputToHidden[j, i];
                     }
                 }
-                sum += biasesHidden[i];
+                sum += hiddenBiases[i];
                 hiddenInputs[i] = sum;
                 hiddenOutputs[i] = Sigmoid(sum);
             }
@@ -129,12 +130,12 @@ namespace letter_recognition_ann_form
             // FORWARD PROPAGATION - Output layer calculations
             for (int i = 0; i < outputNodes; i++)
             {
-                double sum = 0.0;
-                for (int j = 0; j < biasesHidden.Length; j++)
+                double sum = 0;
+                for (int j = 0; j < hiddenBiases.Length; j++)
                 {
-                    sum += hiddenOutputs[j] * weightsHiddenOutput[j, i];
+                    sum += hiddenOutputs[j] * weightsHiddenToOutput[j, i];
                 }
-                sum += biasOutput[i];
+                sum += outputBiases[i];
                 output[i] = Sigmoid(sum);
             }
 
@@ -149,60 +150,76 @@ namespace letter_recognition_ann_form
             for (int i = 0; i < outputNodes; i++)
             {
                 double deltaOutput = errors[i] * SigmoidDerivative(output[i]);
-                for (int j = 0; j < biasesHidden.Length; j++)
+                for (int j = 0; j < hiddenBiases.Length; j++)
                 {
-                    weightsHiddenOutput[j, i] += hiddenOutputs[j] * deltaOutput * learningRate;
+                    weightsHiddenToOutput[j, i] += hiddenOutputs[j] * deltaOutput * learningRate;
                 }
-                biasOutput[i] += deltaOutput * learningRate;
+                outputBiases[i] += deltaOutput * learningRate;
             }
 
             // Updating hidden layer weights and biases
-            for (int i = 0; i < biasesHidden.Length; i++)
+            for (int i = 0; i < hiddenBiases.Length; i++)
             {
-                double sum = 0.0;
+                double sum = 0;
                 for (int j = 0; j < outputNodes; j++)
                 {
-                    sum += errors[j] * weightsHiddenOutput[i, j];
+                    sum += errors[j] * weightsHiddenToOutput[i, j];
                 }
                 double deltaHidden = sum * SigmoidDerivative(hiddenInputs[i]);
                 for (int j = 0; j < inputNodes; j++)
                 {
                     for (int k = 0; k < cols; k++)
                     {
-                        weightsInputHidden[j, i] += inputs[j, k] * deltaHidden * learningRate;
+                        weightsInputToHidden[j, i] += inputs[j, k] * deltaHidden * learningRate;
                     }
                 }
-                biasesHidden[i] += deltaHidden * learningRate;
+                hiddenBiases[i] += deltaHidden * learningRate;
             }
+            NeuralNet.error = errors.Max(num => Math.Abs(num));
         }
 
         public static void SerializeWeights()
         {
-            string jsonWeightsInputHidden = JsonConvert.SerializeObject(weightsInputHidden);
-            string jsonWeightsHiddenOutput = JsonConvert.SerializeObject(weightsHiddenOutput);
-            string jsonBiasesHidden = JsonConvert.SerializeObject(biasesHidden);
-            string jsonBiasOutput = JsonConvert.SerializeObject(biasOutput);
+            try
+            {
+                string jsonweightsInputToHidden = JsonConvert.SerializeObject(weightsInputToHidden);
+                string jsonweightsHiddenToOutput = JsonConvert.SerializeObject(weightsHiddenToOutput);
+                string jsonhiddenBiases = JsonConvert.SerializeObject(hiddenBiases);
+                string jsonoutputBiases = JsonConvert.SerializeObject(outputBiases);
 
-            File.WriteAllText("weightsInputHidden.txt", jsonWeightsInputHidden);
-            File.WriteAllText("weightsHiddenOutput.txt", jsonWeightsHiddenOutput);
-            File.WriteAllText("biasesHidden.txt", jsonBiasesHidden);
-            File.WriteAllText("biasOutput.txt", jsonBiasOutput);
+                File.WriteAllText("weightsInputToHidden.txt", jsonweightsInputToHidden);
+                File.WriteAllText("weightsHiddenToOutput.txt", jsonweightsHiddenToOutput);
+                File.WriteAllText("hiddenBiases.txt", jsonhiddenBiases);
+                File.WriteAllText("outputBiases.txt", jsonoutputBiases);
+
+                MessageBox.Show("Weights and biases are saved to the file.");
+
+            } catch (Exception e)
+            {
+                MessageBox.Show("A problem occured when writing files.");
+            }
         }
 
         public static void DeserializeWeights()
         {
-            
-            string jsonWeightsInputHidden = File.ReadAllText("weightsInputHidden.txt");
-            string jsonWeightsHiddenOutput = File.ReadAllText("weightsHiddenOutput.txt");
-            string jsonBiasesHidden = File.ReadAllText("biasesHidden.txt");
-            string jsonBiasOutput = File.ReadAllText("biasOutput.txt");
+            try
+            {
+                string jsonweightsInputToHidden = File.ReadAllText("weightsInputToHidden.txt");
+                string jsonweightsHiddenToOutput = File.ReadAllText("weightsHiddenToOutput.txt");
+                string jsonhiddenBiases = File.ReadAllText("hiddenBiases.txt");
+                string jsonoutputBiases = File.ReadAllText("outputBiases.txt");
 
-            weightsInputHidden = JsonConvert.DeserializeObject<double[,]>(jsonWeightsInputHidden);
-            weightsHiddenOutput = JsonConvert.DeserializeObject<double[,]>(jsonWeightsHiddenOutput);
-            biasesHidden = JsonConvert.DeserializeObject<double[]>(jsonBiasesHidden);
-            biasOutput = JsonConvert.DeserializeObject<double[]>(jsonBiasOutput);
-            
-            
+                weightsInputToHidden = JsonConvert.DeserializeObject<double[,]>(jsonweightsInputToHidden);
+                weightsHiddenToOutput = JsonConvert.DeserializeObject<double[,]>(jsonweightsHiddenToOutput);
+                hiddenBiases = JsonConvert.DeserializeObject<double[]>(jsonhiddenBiases);
+                outputBiases = JsonConvert.DeserializeObject<double[]>(jsonoutputBiases);
+
+                MessageBox.Show("Weights and biases are loaded from the file.");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("A problem occured when reading files.");
+            }
         }
     }
 }
